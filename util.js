@@ -1,1 +1,0 @@
-const graphCMSImageLoader = ({ src }) => src;
