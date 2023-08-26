@@ -14,30 +14,32 @@ const authOptions: NextAuthOptions = {
       type: 'credentials',
       name: 'credentials',
       credentials: {},
-      authorize: async (credentials) => {
-        const { username, password } = credentials as {
-          username: string;
-          password: string;
-        };
-        if (!username || !password) {
-          throw new Error(`User Name | Password is Missing!`);
+      async authorize(credentials) {
+        try {
+          const { username, password } = credentials as {
+            username: string;
+            password: string;
+          };
+          if (!username || !password) {
+            throw new Error(`User Name | Password is Missing!`);
+          }
+
+          const user = await prisma.user.findFirst({
+            where: { username: username },
+          });
+
+          if (user) {
+            if (user?.state === 'online')
+              return await prisma.user.update({
+                where: { id: user?.id },
+                data: { state: 'offline' },
+              });
+
+            if (user?.password === password) return user;
+          }
+        } catch (error) {
+          throw new Error(`${error}`);
         }
-
-        const user = await prisma.user.findFirst({
-          where: { username: username },
-        });
-
-        if (user) {
-          if (user?.state === 'online')
-            return await prisma.user.update({
-              where: { id: user?.id },
-              data: { state: 'offline' },
-            });
-
-          if (user?.password === password) return user;
-        }
-
-        throw new Error(`Wrong User Name | Password!`);
       },
     }),
   ],
