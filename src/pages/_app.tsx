@@ -36,10 +36,7 @@ import { useDisclosure } from '@mantine/hooks';
 const App = (props: AppProps & { colorScheme: ColorScheme }) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const {
-    Component,
-    pageProps: { session, ...pageProps },
-  } = props;
+  const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
     (process.env.VERCEL_ENV === 'production' && 'dark') || props.colorScheme
   );
@@ -53,6 +50,8 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
   };
 
   const AppContent = () => {
+    const { status, data } = useSession();
+    const [opened_new_user, { open: open_new_user, close: close_new_user }] = useDisclosure(false);
     return (
       <>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
@@ -62,14 +61,16 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
               padding="md"
               navbar={
                 <>
-                  <Navbar
-                    p="md"
-                    hiddenBreakpoint="sm"
-                    hidden={!opened}
-                    width={{ sm: 250, lg: 300 }}
-                  >
-                    <NavBar />
-                  </Navbar>
+                  {status === 'authenticated' && (
+                    <Navbar
+                      p="md"
+                      hiddenBreakpoint="sm"
+                      hidden={!opened}
+                      width={{ sm: 250, lg: 300 }}
+                    >
+                      <NavBar />
+                    </Navbar>
+                  )}
                 </>
               }
               header={
@@ -102,21 +103,61 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
                     </Group>
                     <Group>
                       <ColorSchemeToggle />
+                      {status === 'authenticated' && (
+                        <>
+                          <Modal
+                            opened={opened_new_user}
+                            onClose={close_new_user}
+                            title="New User"
+                            centered
+                          >
+                            {/* <NewUser /> */}
+                          </Modal>
+                          <Center onClick={open_new_user}>
+                            <ActionIcon variant="light" size="xl">
+                              <IconPlus size={24} />
+                            </ActionIcon>
+                          </Center>
+                          <ActionIcon variant="light" size="xl">
+                            <IconLogout
+                              color="red"
+                              size={20}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                notifications.show({
+                                  color: 'red',
+                                  title: 'Authentication',
+                                  message: 'Logging out ... Thanks for using Manta Wallet',
+                                });
+                                signOut();
+                              }}
+                            />
+                          </ActionIcon>
+                        </>
+                      )}
                     </Group>
                   </Group>
                 </Header>
               }
               aside={
-                <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-                  <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-                    <Text>Application sidebar</Text>
-                  </Aside>
-                </MediaQuery>
+                <>
+                  {status === 'authenticated' && (
+                    <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                      <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+                        <Text>Application sidebar</Text>
+                      </Aside>
+                    </MediaQuery>
+                  )}
+                </>
               }
               footer={
-                <Footer height={60} p="md">
-                  Application footer
-                </Footer>
+                <>
+                  {status === 'authenticated' && (
+                    <Footer height={60} p="md">
+                      Application footer
+                    </Footer>
+                  )}
+                </>
               }
               styles={(theme) => ({
                 main: {
@@ -125,9 +166,7 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
                 },
               })}
             >
-              <SessionProvider session={session}>
-                <Component {...pageProps} />
-              </SessionProvider>
+              <Component {...pageProps} />
             </AppShell>
           </MantineProvider>
         </ColorSchemeProvider>
@@ -141,7 +180,9 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="shortcut icon" href="/favicon.jpg" />
       </Head>
-      <AppContent />
+      <SessionProvider session={pageProps.session}>
+        <AppContent />
+      </SessionProvider>
     </>
   );
 };
