@@ -10,12 +10,14 @@ const SECRET = process.env.NEXT_PUBLIC_JWT_SECRET;
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      id: 'credentials',
-      type: 'credentials',
-      name: 'credentials',
-      credentials: {},
-      async authorize(credentials) {
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials, req) {
         try {
+          if (!credentials) return;
           const { username, password } = credentials as {
             username: string;
             password: string;
@@ -35,7 +37,7 @@ const authOptions: NextAuthOptions = {
                 data: { state: 'offline' },
               });
 
-            if (user?.password === password) return user;
+            if (user?.password === password) return user as any;
           }
         } catch (error) {
           throw new Error(`${error}`);
