@@ -52,7 +52,7 @@ const Page: NextPage = (): JSX.Element => {
             id: 'sing-in-status',
             color: 'teal',
             title: 'Successful Sign In!',
-            message: `Welcome to Destiny Credit LTD, ${form.values.username}`,
+            message: `Welcome to Royal Diadems, ${form.values.username}`,
             icon: <IconCheck size={16} />,
             autoClose: 8000,
           });
