@@ -51,7 +51,7 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
 
   const AppContent = () => {
     const { status, data } = useSession();
-    const [opened_new_user, { open: open_new_user, close: close_new_user }] = useDisclosure(false);
+
     return (
       <>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
@@ -105,19 +105,6 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
                       <ColorSchemeToggle />
                       {status === 'authenticated' && (
                         <>
-                          <Modal
-                            opened={opened_new_user}
-                            onClose={close_new_user}
-                            title="New User"
-                            centered
-                          >
-                            {/* <NewUser /> */}
-                          </Modal>
-                          <Center onClick={open_new_user}>
-                            <ActionIcon variant="light" size="xl">
-                              <IconPlus size={24} />
-                            </ActionIcon>
-                          </Center>
                           <ActionIcon variant="light" size="xl">
                             <IconLogout
                               color="red"
