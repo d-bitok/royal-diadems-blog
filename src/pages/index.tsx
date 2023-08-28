@@ -1,6 +1,10 @@
 import { Carousel } from '@mantine/carousel';
+import { SessionProvider, signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useMediaQuery } from '@mantine/hooks';
 import { createStyles, Paper, Text, Title, Button, useMantineTheme, rem } from '@mantine/core';
+import { useEffect } from 'react';
+import { Protected } from '../components';
 // import Autoplay from 'embla-carousel-autoplay';
 // import { useRef } from 'react';
 
@@ -110,15 +114,17 @@ const HomePage = () => {
   ));
 
   return (
-    <Carousel
-      slideSize="50%"
-      breakpoints={[{ maxWidth: 'sm', slideSize: '100%', slideGap: 2 }]}
-      slideGap="xl"
-      align="start"
-      slidesToScroll={mobile ? 1 : 2}
-    >
-      {slides}
-    </Carousel>
+    <Protected>
+      <Carousel
+        slideSize="50%"
+        breakpoints={[{ maxWidth: 'sm', slideSize: '100%', slideGap: 2 }]}
+        slideGap="xl"
+        align="start"
+        slidesToScroll={mobile ? 1 : 2}
+      >
+        {slides}
+      </Carousel>
+    </Protected>
   );
 };
 
