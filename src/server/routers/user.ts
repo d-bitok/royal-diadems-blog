@@ -43,7 +43,7 @@ export const userRouter = router({
       let response = await prisma.user.findMany();
 
       return {
-        response: response.length > 0 ? response[0] : null,
+        response: response.length > 0 ? response : null,
       };
     } catch (error) {
       return {
