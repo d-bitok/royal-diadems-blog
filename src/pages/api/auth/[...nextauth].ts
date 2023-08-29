@@ -31,14 +31,15 @@ const authOptions: NextAuthOptions = {
           });
 
           if (user) {
-            if (user?.state === 'online')
-              return await prisma.user.update({
-                where: { id: user?.id },
-                data: { state: 'offline' },
-              });
+            // if (user?.state === 'online')
+            //   return await prisma.user.update({
+            //     where: { id: user?.id },
+            //     data: { state: 'offline' },
+            //   });
 
             if (user?.password === password) return user as any;
           }
+          throw new Error(`Username or Password is Wrong!`);
         } catch (error) {
           throw new Error(`${error}`);
         }
