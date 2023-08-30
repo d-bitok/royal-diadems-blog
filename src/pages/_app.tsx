@@ -1,4 +1,7 @@
 import { getCookie, setCookie } from 'cookies-next';
+import { GetServerSidePropsContext } from 'next';
+import { unstable_getServerSession } from 'next-auth';
+import authOptions from './api/auth/[...nextauth]';
 import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -51,6 +54,7 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
 
   const AppContent = () => {
     const { status, data } = useSession();
+    console.log(data);
 
     return (
       <>
@@ -174,12 +178,26 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
   );
 };
 
-App.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await NextApp.getInitialProps(appContext);
+App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
+  colorscheme: getCookie('mantine-color-scheme', ctx) || 'dark',
+});
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
   return {
-    ...appProps,
-    colorScheme: getCookie('mantine-color-scheme', appContext.ctx) || 'dark',
+    props: {
+      session,
+    },
   };
-};
+}
 
 export default trpc.withTRPC(App);
