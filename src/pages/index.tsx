@@ -126,7 +126,7 @@ const HomePage = () => {
       >
         {slides}
       </Carousel>
-      <pre>{JSON.stringify(posts, null, 2)}</pre>
+      <pre>{JSON.stringify(posts, undefined, 2)}</pre>
     </Protected>
   );
 };
