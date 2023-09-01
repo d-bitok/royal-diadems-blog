@@ -5,6 +5,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { createStyles, Paper, Text, Title, Button, useMantineTheme, rem } from '@mantine/core';
 import { useEffect } from 'react';
 import { Protected } from '../components';
+import { trpc } from '../utils/trpc';
 // import Autoplay from 'embla-carousel-autoplay';
 // import { useRef } from 'react';
 
@@ -105,6 +106,7 @@ const data = [
 ];
 
 const HomePage = () => {
+  const posts = trpc.post.list.useQuery();
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const slides = data.map((item) => (
@@ -124,6 +126,7 @@ const HomePage = () => {
       >
         {slides}
       </Carousel>
+      <pre>{JSON.stringify(posts, null, 2)}</pre>
     </Protected>
   );
 };
