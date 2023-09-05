@@ -11,6 +11,7 @@ import {
   IconMessageChatbot,
   IconApps,
   IconUsers,
+  IconBrandBlogger,
 } from '@tabler/icons-react';
 import { Box, NavLink } from '@mantine/core';
 import Link from 'next/link';
@@ -24,6 +25,13 @@ const nav_data = [
     description: 'Your Blog Info',
     rightSection: <IconChevronRight size={16} stroke={1.5} />,
     view: '/',
+  },
+  {
+    icon: IconBrandBlogger,
+    label: 'Home',
+    description: 'Your Blog Info',
+    rightSection: <IconChevronRight size={16} stroke={1.5} />,
+    view: '/post/posts',
   },
 ];
 
