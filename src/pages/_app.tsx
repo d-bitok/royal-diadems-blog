@@ -54,7 +54,7 @@ const App = (props: AppProps & { colorScheme: ColorScheme }) => {
 
   const AppContent = () => {
     const { status, data } = useSession();
-    const users = trpc.user.list.useQuery()
+    const users = trpc.user.list.useQuery();
 
     return (
       <>

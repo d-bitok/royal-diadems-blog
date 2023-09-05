@@ -31,11 +31,11 @@ const authOptions: NextAuthOptions = {
           });
 
           if (user) {
-            // if (user?.state === 'online')
-            //   return await prisma.user.update({
-            //     where: { id: user?.id },
-            //     data: { state: 'offline' },
-            //   });
+            if (user?.online)
+              return await prisma.user.update({
+                where: { id: user?.id },
+                data: { online: false },
+              });
 
             if (user?.password === password) return user as any;
           }

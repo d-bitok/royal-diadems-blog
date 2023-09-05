@@ -52,13 +52,14 @@ model User {
   image         String?
   email         String?   @unique
   emailVerified DateTime?
-  state         String?
+  online        Boolean?
   password      String?
   firstName     String?
   lastName      String?
   accounts      Account[]
   sessions      Session[]
-  post          Post[]
+  post          Post[]    @relation("WrittenBy")
+  comment       Comment[] @relation("CommentedBy")
 
   @@index(fields: [id, email, username])
 }
@@ -72,11 +73,37 @@ model VerificationToken {
 }
 
 model Post {
+  id            String     @id @default(uuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  featuredPost  Boolean    @default(false)
+  featuredImage Boolean    @default(false)
+  content       String
+  title         String
+  slug          String
+  excerpt       String
+  categories    Category[]
+  comments      Comment[]  @relation("CommentedOn")
+  author        User       @relation("WrittenBy", fields: [authorId], references: [id])
+  authorId      String
+}
+
+model Category {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  post      String
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
+  slug      String
+  name      String
+  post      Post[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comment   String
+  name      User     @relation("CommentedBy", fields: [writerId], references: [id])
+  post      Post     @relation("CommentedOn", fields: [postId], references: [id])
+  writerId  String
+  postId    String
 }
