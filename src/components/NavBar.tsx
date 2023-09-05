@@ -12,6 +12,11 @@ import {
   IconApps,
   IconUsers,
   IconBrandBlogger,
+  IconDetails,
+  IconPhoneCall,
+  IconNews,
+  IconMessages,
+  IconCategory,
 } from '@tabler/icons-react';
 import { Box, NavLink } from '@mantine/core';
 import Link from 'next/link';
@@ -27,11 +32,32 @@ const nav_data = [
     view: '/',
   },
   {
-    icon: IconBrandBlogger,
-    label: 'Home',
-    description: 'Your Blog Info',
+    icon: IconNews,
+    label: 'About',
+    description: 'About us',
     rightSection: <IconChevronRight size={16} stroke={1.5} />,
-    view: '/post/posts',
+    view: '/about',
+  },
+  {
+    icon: IconPhoneCall,
+    label: 'Contact',
+    description: 'Reach out to us',
+    rightSection: <IconChevronRight size={16} stroke={1.5} />,
+    view: '/contact',
+  },
+  {
+    icon: IconCategory,
+    label: 'Categories',
+    description: 'More categories',
+    rightSection: <IconChevronRight size={16} stroke={1.5} />,
+    view: '/categories',
+  },
+  {
+    icon: IconMessages,
+    label: 'Testimonials',
+    description: 'What others say about us',
+    rightSection: <IconChevronRight size={16} stroke={1.5} />,
+    view: '/testimonials',
   },
 ];
 
