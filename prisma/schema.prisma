@@ -52,7 +52,7 @@ model User {
   image         String?
   email         String?   @unique
   emailVerified DateTime?
-  online        Boolean
+  online        Boolean?
   password      String?
   firstName     String?
   lastName      String?
